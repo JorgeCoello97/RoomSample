@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RoomSample</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="random_values">Random Values</string>
+    <string name="add_new_person">ADD NEW PERSON</string>
+    <string name="person_list">PERSON LIST</string>
+</resources>
