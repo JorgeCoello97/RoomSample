@@ -1,9 +1,9 @@
 package com.jorch.roomsample
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.jorch.roomsample.databinding.ActivityMainBinding
 import com.jorch.roomsample.databinding.ItemPersonBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

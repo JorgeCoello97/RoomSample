@@ -4,9 +4,12 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
+import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jorch.roomsample.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         app = applicationContext as App
         with(binding){
+            recyclerViewPersons.layoutManager = LinearLayoutManager(applicationContext)
             lifecycleScope.launch {
                 swipeRefresh.isRefreshing = true
                 var people: List<Person>
@@ -53,9 +57,21 @@ class MainActivity : AppCompatActivity() {
                     withContext(Dispatchers.IO) {
                         app.room.personDao().insert(person)
                     }
-                    adapter.people + person
+                    adapter.people += person
                     adapter.notifyDataSetChanged()
                     swipeRefresh.isRefreshing = false
+                }
+            }
+            swipeRefresh.setOnRefreshListener {
+                lifecycleScope.launch {
+                    recyclerViewPersons.visibility = View.GONE
+                    var people: List<Person>
+                    withContext(Dispatchers.IO){
+                        people = app.room.personDao().getAll()
+                    }
+                    adapter.people = people
+                    recyclerViewPersons.visibility = View.VISIBLE
+                    swipeRefresh.isRefreshing  = false
                 }
             }
         }
@@ -63,16 +79,14 @@ class MainActivity : AppCompatActivity() {
     private fun envelopeForDelete(person:Person, scope: CoroutineScope) = with(binding){
         scope.launch() {
             swipeRefresh.isRefreshing  = true
-            val seqPeople = adapter.people.asSequence()
-            val idPersonDeleted = person.id
 
             withContext(Dispatchers.IO){
                 app.room.personDao().delete(person)
             }
 
-            adapter.people = seqPeople
-                .filter { person.id != idPersonDeleted }
-                .toList()
+            val idPersonDeleted = person.id
+            val people = adapter.people.filter {it.id != idPersonDeleted }
+            adapter.people = people
             adapter.notifyDataSetChanged()
             swipeRefresh.isRefreshing  = false
         }
