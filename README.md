@@ -1,5 +1,5 @@
 # RoomSample
-<img src="./logo.png" width="382" height="636" />
+<img src="./logo.png" width="411" height="731" />
 
 ## Description
 Test about Room library
