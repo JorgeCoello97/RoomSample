@@ -2,7 +2,7 @@
 <img src="./logo.png" width="411" height="731" />
 
 ## Description
-Test about Room library
+Test about Room database library
 
 ## Targets
 * Use Room
